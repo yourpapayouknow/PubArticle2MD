@@ -18,6 +18,7 @@
 const state = {
   apiAvailable: false,
   runtime: "detecting",
+  apiRuntime: "",
   lastArticle: null,
   lastPayload: null,
   lastMode: "auto"
@@ -403,13 +404,17 @@ async function detectApiAvailability() {
     });
 
     if (!response.ok) {
-      return false;
+      return null;
     }
 
     const data = await response.json().catch(() => null);
-    return Boolean(data && data.ok);
+    if (!data || data.ok !== true) {
+      return null;
+    }
+
+    return data;
   } catch {
-    return false;
+    return null;
   } finally {
     clearTimeout(timer);
   }
@@ -418,7 +423,11 @@ async function detectApiAvailability() {
 function updateRuntimeLabel() {
   if (state.apiAvailable) {
     state.runtime = "api";
-    ui.runtimeMode.value = "本地 API 模式（高保真，支持后端 PDF）";
+    if (String(state.apiRuntime).startsWith("desktop")) {
+      ui.runtimeMode.value = "本地 API 模式（桌面 EXE 内置后端）";
+    } else {
+      ui.runtimeMode.value = "本地 API 模式（Node 服务，高保真）";
+    }
   } else {
     state.runtime = "static";
     ui.runtimeMode.value = "纯前端模式（GitHub Pages，可直接在线运行）";
@@ -640,7 +649,9 @@ async function exportPdf() {
 }
 
 async function initRuntime() {
-  state.apiAvailable = await detectApiAvailability();
+  const health = await detectApiAvailability();
+  state.apiAvailable = Boolean(health);
+  state.apiRuntime = health?.runtime || "";
   updateRuntimeLabel();
   updateModeHints();
 }

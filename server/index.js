@@ -35,7 +35,11 @@ function createApp() {
   app.use(express.static(path.join(__dirname, "..", "public"), { maxAge: "1h" }));
 
   app.get("/api/health", (_req, res) => {
-    res.json({ ok: true, service: "pubarticle2md-pwa" });
+    res.json({
+      ok: true,
+      service: "pubarticle2md-pwa",
+      runtime: process.env.PUBARTICLE_RUNTIME || "node"
+    });
   });
 
   app.post("/api/parse", async (req, res) => {
