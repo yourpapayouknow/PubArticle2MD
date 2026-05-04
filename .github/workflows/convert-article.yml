@@ -1,0 +1,50 @@
+﻿name: Convert WeChat Article
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: WeChat article URL
+        required: true
+        default: https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg
+      with_pdf:
+        description: Also generate PDF
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        if: ${{ inputs.with_pdf }}
+        run: npx playwright install --with-deps chromium
+
+      - name: Convert article (with PDF)
+        if: ${{ inputs.with_pdf }}
+        run: npm run convert -- --url "${{ inputs.url }}" --outdir outputs
+
+      - name: Convert article (without PDF)
+        if: ${{ !inputs.with_pdf }}
+        run: npm run convert -- --url "${{ inputs.url }}" --outdir outputs --no-pdf
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: article-exports
+          path: outputs/
+          if-no-files-found: error

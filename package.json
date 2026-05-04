@@ -1,0 +1,26 @@
+﻿{
+  "name": "pubarticle2md-pwa",
+  "version": "0.1.0",
+  "description": "Local PWA + Node service for converting WeChat public account articles to Markdown/PDF.",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "lint": "node scripts/lint.js",
+    "convert": "node scripts/convert-cli.js",
+    "install:chromium": "playwright install chromium"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "express": "^5.1.0",
+    "jszip": "^3.10.1",
+    "playwright": "^1.55.0",
+    "sanitize-filename": "^1.6.3",
+    "turndown": "^7.2.1",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
+}

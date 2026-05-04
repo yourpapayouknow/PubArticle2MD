@@ -1,0 +1,51 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <title>PubArticle2MD PWA</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="badge">PWA + Local Only</p>
+      <h1>PubArticle2MD</h1>
+      <p class="subtitle">Convert WeChat public account articles to Markdown or PDF without uploading content to third-party services.</p>
+    </header>
+
+    <section class="panel">
+      <label for="urlInput">WeChat article URL</label>
+      <div class="row">
+        <input id="urlInput" type="url" value="https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg" placeholder="https://mp.weixin.qq.com/s/..." required>
+        <button id="parseBtn" class="btn primary">Parse</button>
+      </div>
+
+      <details class="raw-html">
+        <summary>Fallback: paste raw HTML if anti-bot verification appears</summary>
+        <label for="sourceUrlInput">Source URL for image referer</label>
+        <input id="sourceUrlInput" type="url" value="https://mp.weixin.qq.com/">
+        <label for="htmlInput">Raw HTML</label>
+        <textarea id="htmlInput" rows="10" placeholder="Paste the page HTML here."></textarea>
+      </details>
+
+      <div class="actions">
+        <button id="mdBtn" class="btn">Download Markdown ZIP</button>
+        <button id="pdfBtn" class="btn">Download PDF</button>
+      </div>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel preview-panel">
+      <h2>Preview</h2>
+      <div id="meta" class="meta"></div>
+      <article id="preview" class="preview"></article>
+    </section>
+  </main>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

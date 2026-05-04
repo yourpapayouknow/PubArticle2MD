@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>PubArticle2MD Icon</title>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="90" fill="url(#g)"/>
+  <rect x="96" y="88" width="320" height="336" rx="30" fill="#ffffff" opacity="0.93"/>
+  <path d="M154 188h204M154 236h204M154 284h164" stroke="#0f766e" stroke-width="22" stroke-linecap="round"/>
+  <path d="M154 352l58-44 58 44" fill="none" stroke="#0f766e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
