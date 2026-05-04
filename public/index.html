@@ -5,47 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f766e">
   <title>PubArticle2MD PWA</title>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="hero">
-      <p class="badge">PWA + Local Only</p>
+      <p class="badge">PWA + GitHub Pages Ready</p>
       <h1>PubArticle2MD</h1>
-      <p class="subtitle">Convert WeChat public account articles to Markdown or PDF without uploading content to third-party services.</p>
+      <p class="subtitle">公众号文章转 Markdown / PDF。支持本地 API 模式与 GitHub Pages 纯前端模式。</p>
     </header>
 
     <section class="panel">
-      <label for="urlInput">WeChat article URL</label>
+      <label for="runtimeMode">运行模式</label>
+      <input id="runtimeMode" type="text" value="检测中..." readonly>
+
+      <label for="fetchMode">抓取方式</label>
+      <select id="fetchMode">
+        <option value="auto" selected>自动（推荐）</option>
+        <option value="api">本地 API（Node 服务）</option>
+        <option value="proxy">代理 URL（Pages 模式）</option>
+        <option value="html">粘贴 HTML（最稳定）</option>
+      </select>
+
+      <label for="urlInput">WeChat 文章链接</label>
       <div class="row">
         <input id="urlInput" type="url" value="https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg" placeholder="https://mp.weixin.qq.com/s/..." required>
-        <button id="parseBtn" class="btn primary">Parse</button>
+        <button id="parseBtn" class="btn primary">解析</button>
       </div>
 
-      <details class="raw-html">
-        <summary>Fallback: paste raw HTML if anti-bot verification appears</summary>
-        <label for="sourceUrlInput">Source URL for image referer</label>
+      <details class="raw-html" id="proxyBox">
+        <summary>代理读取配置（GitHub Pages 可用）</summary>
+        <label for="proxyTemplate">代理模板（包含 {url}）</label>
+        <input id="proxyTemplate" type="text" value="https://r.jina.ai/http://{url}">
+        <p class="hint">说明：纯静态 Pages 受 CORS 限制，可能无法直连 `mp.weixin.qq.com`，可通过代理或直接粘贴 HTML。</p>
+      </details>
+
+      <details class="raw-html" id="htmlBox">
+        <summary>粘贴 HTML（跨域受限时建议）</summary>
+        <label for="sourceUrlInput">原始页面 URL（用于元信息）</label>
         <input id="sourceUrlInput" type="url" value="https://mp.weixin.qq.com/">
         <label for="htmlInput">Raw HTML</label>
-        <textarea id="htmlInput" rows="10" placeholder="Paste the page HTML here."></textarea>
+        <textarea id="htmlInput" rows="10" placeholder="粘贴文章完整 HTML"></textarea>
       </details>
 
       <div class="actions">
-        <button id="mdBtn" class="btn">Download Markdown ZIP</button>
-        <button id="pdfBtn" class="btn">Download PDF</button>
+        <button id="mdBtn" class="btn">下载 Markdown ZIP</button>
+        <button id="pdfBtn" class="btn">下载 PDF</button>
       </div>
 
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
     <section class="panel preview-panel">
-      <h2>Preview</h2>
+      <h2>预览</h2>
       <div id="meta" class="meta"></div>
       <article id="preview" class="preview"></article>
     </section>
   </main>
 
-  <script src="/app.js" defer></script>
+  <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+  <script src="https://unpkg.com/turndown-plugin-gfm/dist/turndown-plugin-gfm.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="./app.js" defer></script>
 </body>
 </html>

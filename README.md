@@ -1,20 +1,44 @@
-﻿# PubArticle2MD（本地 PWA 版）
+﻿# PubArticle2MD（GitHub Pages 在线版 + 本地增强版）
 
-PubArticle2MD 是一个本地运行的公众号文章转换工具，支持导出 Markdown 和 PDF。
+PubArticle2MD 是一个公众号文章转换工具，支持导出 Markdown 和 PDF。
 
-## 项目特点
+- 在线模式：直接部署到 GitHub Pages，打开网页即可运行（纯前端）。
+- 本地增强模式：启动 Node 服务后，使用后端抓取与高保真 PDF 导出。
 
-- 全流程本地执行，不依赖在线转换站点。
-- 前端为 PWA，可安装到桌面使用。
-- 支持公众号文章常见懒加载图片处理和防盗链场景。
-- 支持浏览器页面使用，也支持命令行批处理。
+## 在线地址（GitHub Pages）
 
-## 环境要求
+部署后地址通常是：
 
-- Node.js 20 及以上（建议 22/24）
-- npm
+`https://yourpapayouknow.github.io/PubArticle2MD/`
 
-## 本地启动
+## 运行模式说明
+
+页面会自动检测并显示当前模式：
+
+1. 纯前端模式（GitHub Pages）
+- 无需本地服务，打开网页即可转换。
+- 支持三种抓取方式：自动、代理 URL、粘贴 HTML。
+- 受浏览器跨域限制影响，某些公众号链接可能无法直接抓取，建议使用“粘贴 HTML”。
+
+2. 本地 API 模式（Node 服务）
+- 需要本地启动 `npm start`。
+- 支持后端抓取、懒加载图片修复、Playwright 生成高保真 PDF。
+
+## GitHub Pages 直接在线使用（你需要的方式）
+
+1. 打开 Pages 页面。
+2. 选择抓取方式：
+- 自动（推荐，系统会根据环境选择）
+- 代理 URL（纯前端跨域受限时可用）
+- 粘贴 HTML（最稳定）
+3. 点击“解析”。
+4. 点击“下载 Markdown ZIP”或“下载 PDF”。
+
+说明：
+- 由于 `mp.weixin.qq.com` 存在反爬与 CORS 限制，“粘贴 HTML”是最稳定方案。
+- 纯前端模式下，若图片跨域不可读，ZIP 中会保留原图链接并提示部分图片下载失败。
+
+## 本地启动（高保真）
 
 ```bash
 npm install
@@ -22,50 +46,40 @@ npm run install:chromium
 npm start
 ```
 
-启动后访问：
+打开：
 
 `http://localhost:8787`
 
-## 页面使用方法
-
-1. 在输入框粘贴公众号文章链接（例如测试链接：`https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg`）。
-2. 点击 `Parse` 解析并预览正文。
-3. 点击 `Download Markdown ZIP` 下载 Markdown+图片资源包。
-4. 点击 `Download PDF` 下载 PDF 文件。
-
-如果微信返回环境验证页，可展开页面里的 fallback 区域，粘贴文章 HTML 再导出。
-
-## 命令行使用方法
+## 命令行批处理（本地）
 
 ```bash
 npm run convert -- --url "https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg" --outdir outputs
 ```
 
-默认输出到 `outputs/`，通常会生成：
+输出目录默认 `outputs/`，通常包含：
 
 - `xxx.md`
 - `xxx.zip`（Markdown + assets）
 - `xxx.pdf`
 
-## GitHub Actions
+## GitHub Actions（已调整）
 
-仓库地址：<https://github.com/yourpapayouknow/PubArticle2MD>
+当前工作流：
 
-已配置两个工作流：
+1. `CI`
+- push / PR 时执行依赖安装与语法检查。
 
-1. `CI`：在 push/PR 时安装依赖并执行语法检查。
-2. `Convert WeChat Article`：手动触发，输入文章 URL 后生成导出文件并上传 artifact。
+2. `Deploy GitHub Pages`
+- push 到 `main` 后自动发布 `public/` 到 GitHub Pages。
+- 也支持手动 `workflow_dispatch`。
 
-手动触发路径：
+## 技术说明（简要）
 
-`Actions -> Convert WeChat Article -> Run workflow`
-
-## 实现说明（简要）
-
-- 从公众号页面提取 `#js_content` 正文。
-- 优先使用 `data-src` 还原懒加载图片链接。
-- 下载图片时附带 `Referer` 和常见浏览器 UA。
-- PDF 导出时将图片内嵌为 Base64，再由 Playwright Chromium 生成。
+- 文章正文提取：优先 `#js_content`。
+- 懒加载修复：优先 `data-src` 回填 `src`。
+- Markdown：Turndown + GFM 插件转换。
+- 前端 PDF：html2pdf.js。
+- 后端 PDF：Playwright Chromium（本地 API 模式）。
 
 ## 免责声明
 
