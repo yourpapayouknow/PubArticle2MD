@@ -1,15 +1,18 @@
-﻿{
+{
   "name": "pubarticle2md-pwa",
   "version": "0.1.0",
-  "description": "Local PWA + Node service for converting WeChat public account articles to Markdown/PDF.",
-  "main": "server/index.js",
+  "description": "Local PWA + desktop app for converting WeChat public account articles to Markdown/PDF.",
+  "main": "desktop/main.js",
   "type": "commonjs",
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "lint": "node scripts/lint.js",
     "convert": "node scripts/convert-cli.js",
-    "install:chromium": "playwright install chromium"
+    "install:chromium": "playwright install chromium",
+    "vendor": "node scripts/copy-vendor.js",
+    "desktop:dev": "electron .",
+    "desktop:dist": "electron-builder --win portable --publish never"
   },
   "engines": {
     "node": ">=20"
@@ -17,10 +20,39 @@
   "dependencies": {
     "cheerio": "^1.1.2",
     "express": "^5.1.0",
+    "html2pdf.js": "^0.10.3",
     "jszip": "^3.10.1",
     "playwright": "^1.55.0",
     "sanitize-filename": "^1.6.3",
     "turndown": "^7.2.1",
     "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.yourpapayouknow.pubarticle2md",
+    "productName": "PubArticle2MD",
+    "directories": {
+      "output": "dist-desktop"
+    },
+    "files": [
+      "desktop/**/*",
+      "public/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-windows-${arch}.${ext}"
+    }
   }
 }

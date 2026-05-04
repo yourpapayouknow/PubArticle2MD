@@ -3,7 +3,7 @@ const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 
 const ROOT = process.cwd();
-const TARGET_DIRS = ["server", "scripts", "public"];
+const TARGET_DIRS = ["server", "scripts", "public", "desktop"];
 
 function walk(dir, files = []) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

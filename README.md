@@ -1,4 +1,4 @@
-﻿# PubArticle2MD（GitHub Pages 在线版 + 本地增强版）
+# PubArticle2MD（GitHub Pages 在线版 + 本地增强版）
 
 PubArticle2MD 是一个公众号文章转换工具，支持导出 Markdown 和 PDF。
 
@@ -10,6 +10,18 @@ PubArticle2MD 是一个公众号文章转换工具，支持导出 Markdown 和 P
 部署后地址通常是：
 
 `https://yourpapayouknow.github.io/PubArticle2MD/`
+
+## Windows EXE（推荐给普通用户）
+
+如果你不想安装 Node/npm，可以直接下载 Release 里的 Windows 便携版 EXE：
+
+1. 打开仓库 `Releases` 页面。
+2. 下载 `PubArticle2MD-xxx-windows-x64.exe`。
+3. 双击运行即可使用。
+
+说明：
+- EXE 内已包含运行时环境，不需要额外安装 Node。
+- EXE 默认运行“纯前端模式”（与 Pages 模式一致），适合直接使用和分发。
 
 ## 运行模式说明
 
@@ -72,6 +84,19 @@ npm run convert -- --url "https://mp.weixin.qq.com/s/5BOAnJ5H4seYxSbXWi5Ibg" --o
 2. `Deploy GitHub Pages`
 - push 到 `main` 后自动发布 `public/` 到 GitHub Pages。
 - 也支持手动 `workflow_dispatch`。
+
+3. `Build Desktop EXE`
+- `push tag (v*)` 或手动触发时，自动构建 Windows 便携版 EXE。
+- 构建成功后自动上传到 GitHub Release，同时保留 workflow artifact。
+
+发布 EXE 的两种方式：
+
+1. 打 tag 自动发布
+```bash
+git tag v0.2.0
+git push origin v0.2.0
+```
+2. 在 Actions 页面手动运行 `Build Desktop EXE`，填写 tag。
 
 ## 技术说明（简要）
 
